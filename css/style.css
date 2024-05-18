@@ -1,0 +1,69 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.game {
+    margin: 50px auto;
+    overflow: hidden;
+}
+
+.frame {
+    background-color: rgb(97, 214, 230);
+    transition: background-color ease-in-out .3s;
+}
+
+.frame .row {
+    display: flex;
+}
+
+.lava {
+    background-color: rgb(240, 59, 14);
+    transition: background-color ease-in-out .3s;
+}
+
+.wall {
+    background-color: rgb(143, 138, 138);
+    transition: background-color ease-in-out .3s;
+}
+
+.player {
+    background-color: rgb(54, 54, 54);
+    transition: background-color ease-in-out .3s;
+}
+
+.coin {
+    background-color: rgb(255, 230, 0);
+    border-radius: 50%;
+    transition: background-color ease-in-out .3s;
+}
+
+.game-over .lava {
+    background-color: rgb(26, 6, 1);
+}
+
+.game-over .wall {
+    background-color: rgb(190, 186, 186);
+}
+
+.game-over .player {
+    background-color: rgb(238, 234, 234);
+}
+
+.game-over .coin {
+    background-color: rgb(32, 32, 32);
+}
+
+.game-over .frame {
+    background-color: rgb(56, 57, 58);
+}
+
+.next .player {
+    background-color: rgb(241, 218, 8);
+}

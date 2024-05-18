@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .wrap {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <a href="#scroll-to">scroll</a>
+    </div>
+    <div class="wrap">
+        <h1 id="scroll-to">Target</h1>
+    </div>
+    <div class="wrap">
+        <a href="#scroll-to">scroll</a>
+    </div>
+
+    <script>
+        class Vector {
+            constructor(x, y) {
+                this._x = x;
+                this._y = y;
+            }
+
+            get x() {
+                return this._x;
+            }
+
+            get y() {
+                return this._y;
+            }
+
+            plus = ({
+                x,
+                y
+            }) => {
+                return new Vector(this._x + x, this._y + y);
+            }
+
+            times = scale => {
+                return new Vector(this._x * scale, this._y * scale);
+            }
+
+            distance = (vec) => {
+                const a = Math.abs(vec.x - this._x);
+                const b = Math.abs(vec.y - this._y);
+                return Math.hypot(a, b);
+            }
+        }
+
+        function scrollAnimate(elemScroll, to, curveBezier, duration = 1000) {
+            function getPoint(pointList, t) {
+                if (pointList.length <= 1) return pointList[0];
+
+                pointList = pointList.map((point, i) => {
+                    if (++i === pointList.length) return false;
+                    const a = point;
+                    const b = pointList[i];
+                    return new Vector(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+                }).filter(Boolean);
+                return getPoint(pointList, t);
+            }
+
+            const start = performance.now();
+            const scroll = elemScroll.pageYOffset;
+
+            requestAnimationFrame(function animate(time) {
+                let fractionTime = (time - start) / duration;
+                if (fractionTime > 1) fractionTime = 1;
+
+                const distance = getPoint(curveBezier, fractionTime).y * to;
+
+                if (to < 0) {
+                    elemScroll.scrollTo(0, scroll + distance);
+                } else {
+                    elemScroll.scrollTo(0, distance);
+                }
+
+                if (fractionTime < 1) {
+                    requestAnimationFrame(animate);
+                }
+
+            });
+        }
+
+        (() => {
+            const btnList = document.querySelectorAll('a[href^="#"]');
+            for (let a of btnList) {
+                a.addEventListener('click', e => {
+                    const target = document.getElementById(a.getAttribute('href').replace('#', ''));
+                    if (!target) return;
+                    e.preventDefault();
+                    const to = target.getBoundingClientRect().top;
+                    const pointList = [new Vector(0, 0), new Vector(0.5, -1), new Vector(0.5, 2), new Vector(1,
+                        1)];
+                    scrollAnimate(window, to, pointList, 4000);
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>
